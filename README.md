@@ -64,7 +64,7 @@ gradle --no-daemon assembleDebug
 
 APK: `app/build/outputs/apk/debug/app-debug.apk`.
 
-GitHub Actions автоматически собирает APK при push в `main`, сохраняет его как workflow artifact и публикует в релиз `v1.0.0`. Это debug-подпись для установки и тестирования; для распространения в Google Play нужна отдельная release-подпись.
+GitHub Actions автоматически собирает APK при push в `main`, сохраняет его как workflow artifact и публикует обновления в релиз `v1.0.1` (предыдущая версия остаётся в `v1.0.0`). Это debug-подпись для установки и тестирования; для распространения в Google Play нужна отдельная release-подпись.
 
 ## Совместимость
 
