@@ -31,7 +31,6 @@ import android.widget.Toast;
 
 import java.text.NumberFormat;
 import java.util.Locale;
-import java.util.Random;
 
 public class MainActivity extends Activity {
     private static final int BG = Color.rgb(245, 241, 234);
@@ -53,7 +52,6 @@ public class MainActivity extends Activity {
     private TextView timerValue;
     private TextView consequenceValue;
     private final Handler handler = new Handler(Looper.getMainLooper());
-    private final Random random = new Random();
 
     private final Runnable timerTick = new Runnable() {
         @Override
@@ -316,7 +314,7 @@ public class MainActivity extends Activity {
                 "Нажми кнопку, когда хочется быстро вспомнить, ради чего ты решил остановиться.",
                 16, DARK, true);
         consequenceValue.setPadding(0, dp(10), 0, dp(12));
-        addButton(anti, "Показать карточку последствий", ACCENT, Color.WHITE, this::drawConsequence);
+        addButton(anti, "Показать следующую карточку", ACCENT, Color.WHITE, this::drawConsequence);
 
         if (!focus.equals("gaming")) {
             addMoneyCalculator(page);
@@ -563,17 +561,18 @@ public class MainActivity extends Activity {
 
     private void drawConsequence() {
         if (consequenceValue == null) return;
-        String[] deck;
-        if (focus.equals("gambling")) {
-            deck = gamblingConsequences;
-        } else if (focus.equals("gaming")) {
-            deck = gamingConsequences;
-        } else {
-            deck = random.nextBoolean() ? gamblingConsequences : gamingConsequences;
-        }
-        String cardText = deck[random.nextInt(deck.length)];
+        int shown = prefs.getInt("consequence_cards", 0);
+        boolean useGambling = focus.equals("gambling")
+                || (focus.equals("both") && shown % 2 == 0);
+        String key = useGambling ? "gambling" : "gaming";
+        String[] deck = useGambling ? gamblingConsequences : gamingConsequences;
+        int index = prefs.getInt("anti_index_" + key, 0);
+        String cardText = deck[index % deck.length];
         consequenceValue.setText(cardText);
-        prefs.edit().putInt("consequence_cards", prefs.getInt("consequence_cards", 0) + 1).apply();
+        prefs.edit()
+                .putInt("anti_index_" + key, index + 1)
+                .putInt("consequence_cards", shown + 1)
+                .apply();
     }
 
     private void startUrgeTimer() {
