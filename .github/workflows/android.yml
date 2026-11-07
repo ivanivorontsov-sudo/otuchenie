@@ -49,11 +49,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           APK="app/build/outputs/apk/debug/app-debug.apk"
-          TAG="v1.0.0"
+          TAG="v1.0.1"
           if gh release view "$TAG" >/dev/null 2>&1; then
             gh release upload "$TAG" "$APK" --clobber
           else
             gh release create "$TAG" "$APK" \
-              --title "Отучение v1.0.0" \
-              --notes "Первая Android-сборка приложения «Отучение». APK подписан debug-ключом для установки и тестирования. Исходный код и методические источники находятся в репозитории."
+              --title "Отучение v1.0.1" \
+              --notes "Обновление: заметное предупреждение о том, что приложение не является медицинским, и справочная правовая информация. APK подписан debug-ключом для установки и тестирования."
           fi
